@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:gam/profile/providers/profile_provider.dart';
+import 'package:gam/routes/routes.dart';
+import 'package:provider/provider.dart';
+
+import 'package:gam/subscription/providers/subscription_provider.dart';
+import 'package:gam/theme/app_theme.dart';
+
 
 void main() {
-  runApp(const MainApp());
+
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
+      ChangeNotifierProvider(create: (_) => ProfileProvider()),
+    ],
+    child: const MainApp(),
+  ));
 }
 
 class MainApp extends StatelessWidget {
@@ -9,12 +23,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'GAM',
+      initialRoute: 'loading',
+      routes: appRoutes,
+      theme: AppTheme.theme,
+      darkTheme: AppTheme.darkTheme,
     );
   }
 }
