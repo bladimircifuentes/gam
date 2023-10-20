@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gam/chat/services/auth_chat_service.dart';
+import 'package:gam/chat/services/chat_service.dart';
+import 'package:gam/chat/services/message_chat_service.dart';
+import 'package:gam/chat/services/socket_chat_service.dart';
 import 'package:gam/profile/providers/profile_provider.dart';
 import 'package:gam/routes/routes.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +17,10 @@ void main() {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
       ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ChangeNotifierProvider(create: (_) => AuthChatService()),
+      ChangeNotifierProvider(create: (_) => SocketChatService()),
+      ChangeNotifierProvider(create: (_) => ChatService()),
+      ChangeNotifierProvider(create: (_) => MessageChatService())
     ],
     child: const MainApp(),
   ));
