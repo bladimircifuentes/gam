@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gam/common/global/environment.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:gam/subscription/models/models.dart';
 import 'package:gam/subscription/services/subscription_services.dart';
-import 'package:http/http.dart' as http;
+
 
 class SubscriptionProvider extends ChangeNotifier{
   bool _existLogo = false;
@@ -27,6 +28,7 @@ class SubscriptionProvider extends ChangeNotifier{
       phones: ''
     ),
     pin: '',
+    urlSocket : '',
     url: ''
   );
   
@@ -52,10 +54,10 @@ class SubscriptionProvider extends ChangeNotifier{
     return existSubscription;
   }
 
-  Future<void> subscribe(String codigo) async{
+  Future<void> subscribe(String codigo, String url) async{
     _state = 2;
     notifyListeners();
-    final uri =Uri.parse('${Environment.subscriptionUrl}/$codigo');
+    final uri =Uri.parse('$url/$codigo');
     debugPrint('URl: $uri');
     try{
 
@@ -97,6 +99,7 @@ class SubscriptionProvider extends ChangeNotifier{
 
     if(_subscriptionServices.existLogo){
       _logo = _subscriptionServices.logo;
+      _existLogo = true;
     }
     notifyListeners();
   }

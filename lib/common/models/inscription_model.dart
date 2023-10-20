@@ -1,6 +1,6 @@
 import 'package:gam/common/models/models.dart';
 
-class Inscription {
+class InscriptionModel {
     int id;
     int estudianteId;
     int userId;
@@ -12,9 +12,9 @@ class Inscription {
     DateTime updatedAt;
     dynamic deletedAt;
     String idHash;
-    CicloGrado cicloGrado;
+    CicloGradoModel cicloGrado;
 
-    Inscription({
+    InscriptionModel({
         required this.id,
         required this.estudianteId,
         required this.userId,
@@ -29,7 +29,7 @@ class Inscription {
         required this.cicloGrado,
     });
 
-    factory Inscription.fromJson(Map<String, dynamic> json) => Inscription(
+    factory InscriptionModel.fromJson(Map<String, dynamic> json) => InscriptionModel(
         id: json["id"],
         estudianteId: json["estudiante_id"],
         userId: json["user_id"],
@@ -41,7 +41,7 @@ class Inscription {
         updatedAt: DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
         idHash: json["id_hash"],
-        cicloGrado: CicloGrado.fromJson(json["ciclo_grado"]),
+        cicloGrado: CicloGradoModel.fromJson(json["ciclo_grado"]),
     );
 
     Map<String, dynamic> toJson() => {

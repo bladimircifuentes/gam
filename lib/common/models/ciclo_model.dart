@@ -1,4 +1,4 @@
-class Ciclo {
+class CicloModel {
     int id;
     int ciclo;
     int activo;
@@ -6,7 +6,7 @@ class Ciclo {
     DateTime updatedAt;
     dynamic deletedAt;
 
-    Ciclo({
+    CicloModel({
         required this.id,
         required this.ciclo,
         required this.activo,
@@ -15,7 +15,7 @@ class Ciclo {
         required this.deletedAt,
     });
 
-    factory Ciclo.fromJson(Map<String, dynamic> json) => Ciclo(
+    factory CicloModel.fromJson(Map<String, dynamic> json) => CicloModel(
         id: json["id"],
         ciclo: json["ciclo"],
         activo: json["activo"],

@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
+
 import 'package:gam/chat/services/auth_chat_service.dart';
 import 'package:gam/chat/services/chat_service.dart';
 import 'package:gam/chat/services/message_chat_service.dart';
 import 'package:gam/chat/services/socket_chat_service.dart';
-import 'package:gam/profile/providers/profile_provider.dart';
+import 'package:gam/common/global/environment_provider.dart';
+import 'package:gam/login/providers/providers.dart';
+import 'package:gam/profile/providers/providers.dart';
 import 'package:gam/routes/routes.dart';
-import 'package:provider/provider.dart';
-
-import 'package:gam/subscription/providers/subscription_provider.dart';
+import 'package:gam/subscription/providers/providers.dart';
 import 'package:gam/theme/app_theme.dart';
+import 'package:provider/provider.dart';
 
 
 void main() {
 
   runApp(
     MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => EnvironmentProvider()),
       ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
+      ChangeNotifierProvider(create: (_) => AuthProvider()),
       ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ChangeNotifierProvider(create: (_) => AuthChatService()),
       ChangeNotifierProvider(create: (_) => SocketChatService()),

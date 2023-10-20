@@ -1,41 +1,41 @@
 import 'package:gam/common/models/models.dart';
 
-class Departamento {
+class MunicipioModel {
     int id;
-    int paisId;
-    String nombre;
+    int departamentoId;
+    String descripcion;
     DateTime createdAt;
     DateTime updatedAt;
     dynamic deletedAt;
-    Pais pais;
+    DepartamentoModel departamento;
 
-    Departamento({
+    MunicipioModel({
         required this.id,
-        required this.paisId,
-        required this.nombre,
+        required this.departamentoId,
+        required this.descripcion,
         required this.createdAt,
         required this.updatedAt,
         required this.deletedAt,
-        required this.pais,
+        required this.departamento,
     });
 
-    factory Departamento.fromJson(Map<String, dynamic> json) => Departamento(
+    factory MunicipioModel.fromJson(Map<String, dynamic> json) => MunicipioModel(
         id: json["id"],
-        paisId: json["pais_id"],
-        nombre: json["nombre"],
+        departamentoId: json["departamento_id"],
+        descripcion: json["descripcion"],
         createdAt: DateTime.parse(json["created_at"]),
         updatedAt: DateTime.parse(json["updated_at"]),
         deletedAt: json["deleted_at"],
-        pais: Pais.fromJson(json["pais"]),
+        departamento: DepartamentoModel.fromJson(json["departamento"]),
     );
 
     Map<String, dynamic> toJson() => {
         "id": id,
-        "pais_id": paisId,
-        "nombre": nombre,
+        "departamento_id": departamentoId,
+        "descripcion": descripcion,
         "created_at": createdAt.toIso8601String(),
         "updated_at": updatedAt.toIso8601String(),
         "deleted_at": deletedAt,
-        "pais": pais.toJson(),
+        "departamento": departamento.toJson(),
     };
 }

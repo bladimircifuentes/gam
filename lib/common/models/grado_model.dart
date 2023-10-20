@@ -1,4 +1,4 @@
-class Grado {
+class GradoModel {
     int id;
     String nombre;
     String descripcion;
@@ -13,7 +13,7 @@ class Grado {
     dynamic deletedAt;
     String descripcionNivel;
 
-    Grado({
+    GradoModel({
         required this.id,
         required this.nombre,
         required this.descripcion,
@@ -29,7 +29,7 @@ class Grado {
         required this.descripcionNivel,
     });
 
-    factory Grado.fromJson(Map<String, dynamic> json) => Grado(
+    factory GradoModel.fromJson(Map<String, dynamic> json) => GradoModel(
         id: json["id"],
         nombre: json["nombre"],
         descripcion: json["descripcion"],

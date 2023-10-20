@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:gam/common/widgets/widgets.dart';
+import 'package:gam/login/providers/providers.dart';
 import 'package:gam/profile/helpers/profile_page.dart';
-import 'package:gam/profile/providers/profile_provider.dart';
+import 'package:gam/profile/providers/providers.dart';
+
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
@@ -11,8 +14,8 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final email = TextEditingController();
     final password = TextEditingController();
-    return Consumer<ProfileProvider>(
-      builder: (context, profile, child) {
+    return Consumer<AuthProvider>(
+      builder: (context, auth, child) {
         return Scaffold(
           body: SafeArea(
             child: SingleChildScrollView(
@@ -21,7 +24,7 @@ class LoginPage extends StatelessWidget {
                 child: Column(
                   children: [
                     const LogoEstablishment(),
-                    _form(email, password, profile, context),
+                    _form(email, password, auth, context),
                     const SizedBox(height: 15,),
                     GestureDetector(
                       onTap: null,
@@ -43,7 +46,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  Container _form(TextEditingController email, TextEditingController password, ProfileProvider profile, BuildContext context) {
+  Container _form(TextEditingController email, TextEditingController password, AuthProvider auth, BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 40),
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -64,8 +67,8 @@ class LoginPage extends StatelessWidget {
           ),
           BtnBlue(
             texto: 'Iniciar Sesion',
-            onPressed: profile.state == 2 ? null :() async {
-              await _sendData(context, email.text.trim(), password.text.trim(),profile);
+            onPressed: auth.state == 2 ? null :() async {
+              await _sendData(context, email.text.trim(), password.text.trim(),auth);
             } 
           ),
         ],
@@ -73,7 +76,7 @@ class LoginPage extends StatelessWidget {
     );
   }
 
-  _sendData(context, String email, String password, ProfileProvider profileProvider) async{
+  _sendData(context, String email, String password, AuthProvider authProvider) async{
     if(email.isEmpty){
       showDialog(
         context: context,
@@ -96,10 +99,14 @@ class LoginPage extends StatelessWidget {
       );
       return;
     }
-    
-    await profileProvider.login(email, password);
+    final apiUrl = Provider.of<EnvironmentProvider>(context, listen: false).apiUrl;
+    await authProvider.login(
+      apiUrl: apiUrl,
+      email: email,
+      password: password
+    );
 
-    if(profileProvider.state == 4){
+    if(authProvider.state == 4){
       showDialog(
         context: context,
         builder: (context) =>  InformDialog(
@@ -111,7 +118,7 @@ class LoginPage extends StatelessWidget {
       return;
     }
 
-    if(profileProvider.state == 5){
+    if(authProvider.state == 5){
       showDialog(
         context: context,
         builder: (context) =>  InformDialog(
@@ -123,8 +130,10 @@ class LoginPage extends StatelessWidget {
       return;
     }
 
-    if(profileProvider.state == 3){
-      await profileProvider.loginSucces();
+    if(authProvider.state == 3){
+      await authProvider.loginSucces();
+      final profileProvider = Provider.of<ProfileProvider>(context,listen: false);
+      await profileProvider.checkProfile();
       Navigator.pushNamedAndRemoveUntil(context, ProfilePage.profile(profileProvider.rol!), (route) => false);
     }
   }

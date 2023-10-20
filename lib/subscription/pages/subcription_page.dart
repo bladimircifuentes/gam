@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gam/common/global/environment.dart';
+import 'package:provider/provider.dart';
+
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:gam/common/widgets/widgets.dart';
 import 'package:gam/subscription/providers/subscription_provider.dart';
-//import 'package:gam/core/helpers/helpers.dart';
-//import 'package:gam/subscription/helpers/show_alert.dart';
-//import 'package:gam/subscription/widgets/widgets.dart';
-//import 'package:gam/ui/views/login_page.dart';
-import 'package:provider/provider.dart';
 
 class SubscriptionPage extends StatelessWidget {
   const SubscriptionPage({super.key});
@@ -41,13 +38,18 @@ class SubscriptionPage extends StatelessWidget {
                             onPressed: subscription.state == 2 ? null : () async{
             
                               if(codigo.text.trim().isEmpty) return;
-            
-                              await subscription.subscribe(codigo.text.trim());
+                              EnvironmentProvider environmentProvider = Provider.of<EnvironmentProvider>(context, listen: false);
+
+                              await subscription.subscribe(codigo.text.trim(),environmentProvider.subscriptionUrl);
                               
                               if(context.mounted && subscription.state == 3){
-                                String url = subscription.subscriptionModel.url;
-                                debugPrint('URL: $url');
-                                Environment.changeUrl(subscription.subscriptionModel.url);
+                                
+                                debugPrint('URL: ${subscription.subscriptionModel.url}');
+                                environmentProvider.changeEnvironment(
+                                  url: subscription.subscriptionModel.url,
+                                  urlSocket: subscription.subscriptionModel.urlSocket
+                                );
+
 
                                 subscription.successSubscription();
 

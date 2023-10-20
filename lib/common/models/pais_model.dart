@@ -1,4 +1,4 @@
-class Pais {
+class PaisModel {
     int id;
     String? letra;
     DateTime createdAt;
@@ -6,7 +6,7 @@ class Pais {
     dynamic deletedAt;
     String? descripcion;
 
-    Pais({
+    PaisModel({
         required this.id,
         this.letra,
         required this.createdAt,
@@ -15,7 +15,7 @@ class Pais {
         this.descripcion,
     });
 
-    factory Pais.fromJson(Map<String, dynamic> json) => Pais(
+    factory PaisModel.fromJson(Map<String, dynamic> json) => PaisModel(
         id: json["id"],
         letra: json["letra"],
         createdAt: DateTime.parse(json["created_at"]),

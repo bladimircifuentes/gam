@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gam/common/global/environment_provider.dart';
+import 'package:gam/common/helpers/token.dart';
 import 'package:gam/profile/helpers/profile_page.dart';
 import 'package:gam/profile/providers/profile_provider.dart';
 import 'package:gam/subscription/providers/subscription_provider.dart';
@@ -34,6 +36,7 @@ class LoadingPage extends StatelessWidget {
   Future checkSubscription(BuildContext context) async {
     SubscriptionProvider subscriptionProvider = Provider.of<SubscriptionProvider>(context,listen: false);
     ProfileProvider profileProvider = Provider.of<ProfileProvider>(context,listen: false);
+    EnvironmentProvider environmentProvider = Provider.of<EnvironmentProvider>(context, listen: false);
     await Future.delayed(const Duration(seconds: 2));
 
     bool existSubscription =await subscriptionProvider.checkSubscription();
@@ -43,8 +46,14 @@ class LoadingPage extends StatelessWidget {
       Navigator.pushNamedAndRemoveUntil(context, 'subscripcion', (route) => false);
       return;
     }
-
-    if(context.mounted && !profileProvider.existUsuario){
+    
+    environmentProvider.changeEnvironment(
+      url: subscriptionProvider.subscriptionModel.url, 
+      urlSocket: subscriptionProvider.subscriptionModel.urlSocket,
+    );
+    bool validToke = await Token.validToke();
+    
+    if(context.mounted && (!profileProvider.existUsuario || !validToke) ){
       Navigator.pushNamedAndRemoveUntil(context, 'login', (route) => false);
       return;
     }

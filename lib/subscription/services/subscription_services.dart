@@ -81,6 +81,7 @@ class SubscriptionServices {
       _logo = file;
       debugPrint('######## LOGO ESTABLISHMENT DOWNLOADED ########');
 
+      await _loadEstablishmentLogo();
       _existLogo = true;
     } catch (e) {
       debugPrint('ocurrio un error al momento de cargar el logo: $e');

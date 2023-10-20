@@ -1,6 +1,6 @@
 import 'package:gam/common/models/models.dart';
 
-class Logged {
+class LoggedModel {
     int id;
     int municipioId;
     String firstName;
@@ -28,15 +28,15 @@ class Logged {
     String idhash;
     String sexo;
     String pathProfile;
-    List<Phone> phones;
+    List<PhoneModel> phones;
     String barCode;
     String fullAddress;
     String shortName;
     List<dynamic> docenteCursos;
-    List<Inscription> inscriptions;
-    Municipio municipio;
+    List<InscriptionModel> inscriptions;
+    MunicipioModel municipio;
 
-    Logged({
+    LoggedModel({
         required this.id,
         required this.municipioId,
         required this.firstName,
@@ -73,7 +73,7 @@ class Logged {
         required this.municipio,
     });
 
-    factory Logged.fromJson(Map<String, dynamic> json) => Logged(
+    factory LoggedModel.fromJson(Map<String, dynamic> json) => LoggedModel(
         id: json["id"],
         municipioId: json["municipio_id"],
         firstName: json["first_name"],
@@ -101,13 +101,13 @@ class Logged {
         idhash: json["idhash"],
         sexo: json["sexo"],
         pathProfile: json["path_profile"],
-        phones: List<Phone>.from(json["phones"].map((x) => Phone.fromJson(x))),
+        phones: List<PhoneModel>.from(json["phones"].map((x) => PhoneModel.fromJson(x))),
         barCode: json["bar_code"],
         fullAddress: json["full_address"],
         shortName: json["short_name"],
         docenteCursos: List<dynamic>.from(json["docente_cursos"].map((x) => x)),
-        inscriptions: List<Inscription>.from(json["inscriptions"].map((x) => Inscription.fromJson(x))),
-        municipio: Municipio.fromJson(json["municipio"]),
+        inscriptions: List<InscriptionModel>.from(json["inscriptions"].map((x) => InscriptionModel.fromJson(x))),
+        municipio: MunicipioModel.fromJson(json["municipio"]),
     );
 
     Map<String, dynamic> toJson() => {

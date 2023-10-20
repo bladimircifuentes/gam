@@ -16,6 +16,7 @@ class SubscriptionModel {
     Application application;
     String pin;
     String url;
+    String urlSocket;
     String logo;
 
     SubscriptionModel({
@@ -24,6 +25,7 @@ class SubscriptionModel {
         required this.application,
         required this.pin,
         required this.url,
+        required this.urlSocket,
         required this.logo,
     });
 
@@ -33,6 +35,7 @@ class SubscriptionModel {
         application: Application.fromJson(json["application"]),
         pin: json["pin"],
         url: json["url"],
+        urlSocket: json["urlSocket"],
         logo: json["logo"],
     );
 
@@ -42,6 +45,7 @@ class SubscriptionModel {
         "application": application.toJson(),
         "pin": pin,
         "url": url,
+        "urlSocket" : urlSocket,
         "logo": logo,
     };
 }

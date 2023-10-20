@@ -1,6 +1,6 @@
 import 'package:gam/common/models/models.dart';
 
-class CicloGrado {
+class CicloGradoModel {
     int id;
     int cicloId;
     int gradoId;
@@ -13,11 +13,11 @@ class CicloGrado {
     dynamic deletedAt;
     String gradocompleto;
     String idHash;
-    Grado grado;
-    Pais seccion;
-    Ciclo ciclo;
+    GradoModel grado;
+    PaisModel seccion;
+    CicloModel ciclo;
 
-    CicloGrado({
+    CicloGradoModel({
         required this.id,
         required this.cicloId,
         required this.gradoId,
@@ -35,7 +35,7 @@ class CicloGrado {
         required this.ciclo,
     });
 
-    factory CicloGrado.fromJson(Map<String, dynamic> json) => CicloGrado(
+    factory CicloGradoModel.fromJson(Map<String, dynamic> json) => CicloGradoModel(
         id: json["id"],
         cicloId: json["ciclo_id"],
         gradoId: json["grado_id"],
@@ -48,9 +48,9 @@ class CicloGrado {
         deletedAt: json["deleted_at"],
         gradocompleto: json["gradocompleto"],
         idHash: json["id_hash"],
-        grado: Grado.fromJson(json["grado"]),
-        seccion: Pais.fromJson(json["seccion"]),
-        ciclo: Ciclo.fromJson(json["ciclo"]),
+        grado: GradoModel.fromJson(json["grado"]),
+        seccion: PaisModel.fromJson(json["seccion"]),
+        ciclo: CicloModel.fromJson(json["ciclo"]),
     );
 
     Map<String, dynamic> toJson() => {

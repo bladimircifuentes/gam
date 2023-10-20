@@ -12,7 +12,7 @@ String responseModelToJson(ResponseModel data) => json.encode(data.toJson());
 
 class ResponseModel {
     bool success;
-    Payload payload;
+    PayloadModel payload;
 
     ResponseModel({
         required this.success,
@@ -21,7 +21,7 @@ class ResponseModel {
 
     factory ResponseModel.fromJson(Map<String, dynamic> json) => ResponseModel(
         success: json["success"],
-        payload: Payload.fromJson(json["payload"]),
+        payload: PayloadModel.fromJson(json["payload"]),
     );
 
     Map<String, dynamic> toJson() => {

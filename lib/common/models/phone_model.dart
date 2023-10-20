@@ -1,11 +1,11 @@
-class Phone {
+class PhoneModel {
     String phone;
 
-    Phone({
+    PhoneModel({
         required this.phone,
     });
 
-    factory Phone.fromJson(Map<String, dynamic> json) => Phone(
+    factory PhoneModel.fromJson(Map<String, dynamic> json) => PhoneModel(
         phone: json["phone"],
     );
 
