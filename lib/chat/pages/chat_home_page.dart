@@ -1,39 +1,22 @@
-/* ESTA ES LA PAGINA DE CHATS RECIENTES */
-
 import 'package:flutter/material.dart';
+import 'package:gam/chat/models/models.dart';
+import 'package:gam/chat/pages/pages.dart';
+import 'package:gam/chat/services/services.dart';
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:gam/chat/models/chat.dart';
-import 'package:gam/chat/models/message_chat.dart';
-import 'package:gam/chat/pages/chat_page.dart';
-import 'package:gam/chat/pages/list_contact_page.dart';
-import 'package:gam/chat/services/auth_chat_service.dart';
-import 'package:gam/chat/services/socket_chat_service.dart';
+
 
 class ChatHomePage extends StatelessWidget {
-  final List<MessageChat> mensajesSingle = [];
+  final List<MessageChatModel> mensajesSingle = [];
 
   ChatHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final environmentProvider = context.read<EnvironmentProvider>();
     final authChatService = Provider.of<AuthChatService>(context);
     final socketChatService = Provider.of<SocketChatService>(context);
-
-    // List<Chat> chats = [
-    //   Chat(
-    //     type: 'single',
-    //     name: 'Mario',
-    //     messages: mensajesSingle,
-    //     description: '1ro. Basico Vespertino "A"',
-    //   ),
-    //   Chat(
-    //     type: 'group',
-    //     name: 'Matematics',
-    //     messages: mensajesSingle,
-    //     description: '1ro. Basico Vespertino "A"',
-    //   ),
-    // ];
-    List<Chat> chats = [];
+    List<ChatModel> chats = [];
 
     return Scaffold(
       appBar: AppBar(
@@ -48,10 +31,6 @@ class ChatHomePage extends StatelessWidget {
         title: const Text('Chats'),
         elevation: 1,
         actions: [
-          // Container(
-          //   margin: const EdgeInsets.only(right: 20),
-          //   child: const Icon(Icons.search),
-          // ),
           Container(
             margin: const EdgeInsets.only(right: 20),
             child: (socketChatService.serverStatus == ServerStatus.online)
@@ -64,16 +43,9 @@ class ChatHomePage extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10),
         child: ChatCursos(chats: chats),
       ),
-      /* body: Selector<iable, List<GradeCycle>>(
-          selector: (_, ies) => ies.gradeCycles,
-          builder: (_, gradeCycles, __) {
-            return ChatCursos(
-              grado: gradeCycles,
-            );
-          }),*/
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await authChatService.userChatContacts(false);
+          await authChatService.userChatContacts(false, environmentProvider.apiUrl);
           if (context.mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => const ListContactPage()),
@@ -87,7 +59,7 @@ class ChatHomePage extends StatelessWidget {
 }
 
 class ChatCursos extends StatelessWidget {
-  final List<Chat> chats;
+  final List<ChatModel> chats;
 
   const ChatCursos({Key? key, required this.chats}) : super(key: key);
 
@@ -113,7 +85,6 @@ class ChatCursos extends StatelessWidget {
             ),
             title: Text(chats[i].name),
             subtitle: Text(chats[i].description),
-            //subtitle: Text(grado[i].section.letter),
           ),
         );
       },

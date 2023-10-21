@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gam/chat/models/models.dart';
+import 'package:gam/chat/services/services.dart';
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:gam/chat/models/message_chat.dart';
-import 'package:gam/chat/services/auth_chat_service.dart';
-import 'package:gam/chat/services/chat_service.dart';
-import 'package:gam/chat/services/message_chat_service.dart';
-import 'package:gam/chat/services/socket_chat_service.dart';
 import 'package:gam/chat/widgets/chat_message.dart';
 
 class ChatPage extends StatefulWidget {
@@ -22,6 +20,7 @@ class _ChatPageState extends State<ChatPage> {
   AuthChatService? authChatService;
   SocketChatService? socketChatService;
   ChatService? chatService;
+  late EnvironmentProvider environmentProvider;
 
   bool _estaEscribiendo = false;
   final _textController = TextEditingController();
@@ -36,6 +35,7 @@ class _ChatPageState extends State<ChatPage> {
     chatService = Provider.of<ChatService>(context, listen: false);
     socketChatService = Provider.of<SocketChatService>(context, listen: false);
     authChatService = Provider.of<AuthChatService>(context, listen: false);
+    environmentProvider = context.read<EnvironmentProvider>();
 
     _scrollController = ScrollController();
     _scrollController.addListener(_infiniteScrolling);
@@ -70,7 +70,7 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   void _loadHistory(int userFromID, int userToID) async {
-    final chat = await chatService!.getChat(userFromID, userToID);
+    final chat = await chatService!.getChat(userFromID, userToID, environmentProvider.apiUrl);
 
     if (chat.isNotEmpty) {
       List<ChatMessage> history = chat
@@ -116,9 +116,10 @@ class _ChatPageState extends State<ChatPage> {
             title: _encabezado(),
             elevation: 1,
           ),
-          body: Column(children: [
-            Flexible(
-              child: ListView.builder(
+          body: Column(
+            children: [
+              Flexible(
+                child: ListView.builder(
                   controller: _scrollController,
                   reverse: true,
                   physics: const BouncingScrollPhysics(),
@@ -133,18 +134,21 @@ class _ChatPageState extends State<ChatPage> {
                             : const SizedBox(),
                       );
                     }
-                  }),
-            ),
-            Card(
-              child: _inputChat(),
-            )
-          ])),
+                  }
+                ),
+              ),
+              Card(
+                child: _inputChat(),
+              ),
+          ]
+        ),
+      ),
     );
   }
 
   Widget _inputChat() {
     return SafeArea(
-        child: Container(
+      child: Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [
@@ -176,8 +180,8 @@ class _ChatPageState extends State<ChatPage> {
             splashColor: Colors.transparent,
             icon: const Icon(Icons.send),
             onPressed: _estaEscribiendo
-                ? () => _handelSubmit(_textController.text.trim())
-                : null,
+              ? () => _handelSubmit(_textController.text.trim())
+              : null,
           ),
         ],
       ),
@@ -223,13 +227,16 @@ class _ChatPageState extends State<ChatPage> {
   void _newMessage(String message, String tipo) async {
     final messageChatService =
         Provider.of<MessageChatService>(context, listen: false);
-    final messageChat = MessageChat(
+    final messageChat = MessageChatModel(
         from: authChatService!.userChat!.id,
         to: chatService!.contactFor!.id,
         content: message);
 
     final savedMessage =
-        await messageChatService.saveMessage(messageChatToJson(messageChat));
+        await messageChatService.saveMessage(
+          messageChatModelToJson(messageChat),
+          environmentProvider.apiUrl,
+        );
 
     if (savedMessage == null) {
       return;

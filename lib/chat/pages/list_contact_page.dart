@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gam/chat/search/contact_search_delegate.dart';
-import 'package:gam/chat/services/socket_chat_service.dart';
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:gam/chat/models/contact_chat.dart';
-import 'package:gam/chat/pages/chat_page.dart';
-import 'package:gam/chat/services/auth_chat_service.dart';
-import 'package:gam/chat/services/chat_service.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:gam/chat/models/models.dart';
+import 'package:gam/chat/pages/pages.dart';
+import 'package:gam/chat/services/services.dart';
+import 'package:gam/chat/search/contact_search_delegate.dart';
 
 class ListContactPage extends StatefulWidget {
   const ListContactPage({super.key});
@@ -17,15 +16,17 @@ class ListContactPage extends StatefulWidget {
 
 class _ListContactPageState extends State<ListContactPage> {
   final RefreshController _refreshController =
-      RefreshController(initialRefresh: false);
+    RefreshController(initialRefresh: false);
   late final SocketChatService socketChatService;
   late final AuthChatService authChatService;
-  List<ContactChat> _contacts = [];
+  late EnvironmentProvider environmentProvider;
+  List<ContactChatModel> _contacts = [];
   int _numberOfContacts = 0;
 
   @override
   void initState() {
     super.initState();
+    environmentProvider = context.read<EnvironmentProvider>();
     authChatService = Provider.of<AuthChatService>(context, listen: false);
     socketChatService = Provider.of<SocketChatService>(context, listen: false);
     _contacts = authChatService.contacts!;
@@ -63,7 +64,6 @@ class _ListContactPageState extends State<ListContactPage> {
             },
             icon: const Icon(
               Icons.search,
-              color: Colors.white,
             ),
             padding: const EdgeInsets.only(right: 8),
           ),
@@ -73,7 +73,9 @@ class _ListContactPageState extends State<ListContactPage> {
       body: SmartRefresher(
         controller: _refreshController,
         enablePullDown: true,
-        onRefresh: _loadContacts,
+        onRefresh: () {
+          _loadContacts();
+        },
         header: WaterDropHeader(
           complete: Icon(
             Icons.check,
@@ -94,13 +96,13 @@ class _ListContactPageState extends State<ListContactPage> {
         return GestureDetector(
           onTap: () {
             final chatService =
-                Provider.of<ChatService>(context, listen: false);
+              Provider.of<ChatService>(context, listen: false);
             chatService.contactFor = contact;
 
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) =>
-                    ChatPage(title: contact.firstName, chatType: 'Single'),
+                  ChatPage(title: contact.firstName, chatType: 'Single'),
               ),
             );
           },
@@ -110,7 +112,7 @@ class _ListContactPageState extends State<ListContactPage> {
     );
   }
 
-  ListTile _contactListTile(ContactChat contact) {
+  ListTile _contactListTile(ContactChatModel contact) {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: Colors.grey[400],
@@ -124,14 +126,14 @@ class _ListContactPageState extends State<ListContactPage> {
     );
   }
 
-  Widget _infoContact(ContactChat contact) {
+  Widget _infoContact(ContactChatModel contact) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: detailsContact(contact),
     );
   }
 
-  List<Widget> detailsContact(ContactChat contact) {
+  List<Widget> detailsContact(ContactChatModel contact) {
     List<Widget> details = [];
     details.addAll([
       Text(contact.firstName),
@@ -157,8 +159,8 @@ class _ListContactPageState extends State<ListContactPage> {
     return details;
   }
 
-  _loadContacts() async {
-    await authChatService.userChatContacts(true);
+  Future<void> _loadContacts() async {
+    await authChatService.userChatContacts(true, environmentProvider.apiUrl);
     setState(() {
       _contacts = authChatService.contacts!;
       _numberOfContacts = _contacts.length;

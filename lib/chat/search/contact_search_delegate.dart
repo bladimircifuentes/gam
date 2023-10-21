@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gam/chat/models/contact_chat.dart';
+import 'package:gam/chat/models/contact_chat_model.dart';
 import 'package:gam/chat/pages/pages.dart';
 import 'package:gam/chat/services/chat_service.dart';
 import 'package:provider/provider.dart';
 
-class ContactSearchDelegate extends SearchDelegate<ContactChat?> {
-  ContactSearchDelegate({ required List<ContactChat> contacts })
+class ContactSearchDelegate extends SearchDelegate<ContactChatModel?> {
+  ContactSearchDelegate({ required List<ContactChatModel> contacts })
     : _contacts = contacts;
 
   @override
   String? get searchFieldLabel => 'Buscar nombre';
-  final List<ContactChat> _contacts;
+  final List<ContactChatModel> _contacts;
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -39,7 +39,7 @@ class ContactSearchDelegate extends SearchDelegate<ContactChat?> {
       return Container();
     }
 
-    List<ContactChat> resultingList = _searchContactByName(query.toLowerCase());
+    List<ContactChatModel> resultingList = _searchContactByName(query.toLowerCase());
 
     if( resultingList.isEmpty ) {
       return Container(
@@ -59,7 +59,7 @@ class ContactSearchDelegate extends SearchDelegate<ContactChat?> {
       return Container();
     }
 
-    List<ContactChat> resultingList = _searchContactByName(query.toLowerCase());
+    List<ContactChatModel> resultingList = _searchContactByName(query.toLowerCase());
 
     if( resultingList.isEmpty ) {
       return Container(
@@ -72,7 +72,7 @@ class ContactSearchDelegate extends SearchDelegate<ContactChat?> {
     return _showContacts(context, resultingList);
   }
 
-  List<ContactChat> _searchContactByName(String name) {
+  List<ContactChatModel> _searchContactByName(String name) {
     return _contacts
       .where((contact) => '${contact.firstName} ${contact.lastName}'
       .toLowerCase()
@@ -80,7 +80,7 @@ class ContactSearchDelegate extends SearchDelegate<ContactChat?> {
       .toList();
   }
 
-  Widget _showContacts(BuildContext context, List<ContactChat> contacts) {
+  Widget _showContacts(BuildContext context, List<ContactChatModel> contacts) {
     return ListView.builder(
       itemCount: contacts.length,
       itemBuilder: (_, i) {

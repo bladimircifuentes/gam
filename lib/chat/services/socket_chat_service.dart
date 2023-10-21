@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:gam/common/global/environment.dart';
 import 'package:gam/common/helpers/token.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
@@ -14,13 +13,13 @@ class SocketChatService with ChangeNotifier {
   ServerStatus get serverStatus => _serverStatus;
   socket_io.Socket get socket => _socket;
 
-  void connect() async {
+  void connect(String socketUrl) async {
     final Map<String, dynamic> dataToken = await json.decode(
       await Token.getToken()
     );
     
 
-    _socket = socket_io.io(Environment.socketUrl, {
+    _socket = socket_io.io(socketUrl, {
       'transports': ['websocket'],
       'autoConnect': 'true',
       'forceNew': true,

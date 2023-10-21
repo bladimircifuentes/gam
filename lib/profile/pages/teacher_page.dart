@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gam/chat/services/auth_chat_service.dart';
 import 'package:gam/chat/services/socket_chat_service.dart';
+import 'package:gam/common/global/environment_provider.dart';
 import 'package:gam/profile/providers/profile_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -9,9 +10,10 @@ class TeacherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authService       = Provider.of<ProfileProvider>(context);
-    final authChatService   = Provider.of<AuthChatService>(context);
-    final socketChatService = Provider.of<SocketChatService>(context);
+    final environmentProvider = context.read<EnvironmentProvider>();
+    final profileProvider     = context.read<ProfileProvider>();
+    final authChatService     = context.read<AuthChatService>();
+    final socketChatService   = context.read<SocketChatService>();
 
     return  Scaffold(
       appBar: AppBar(
@@ -31,14 +33,19 @@ class TeacherPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           try {
-            debugPrint('ID: ${authService.usuario!.id}');
+            debugPrint('ON PRESSED TEACHER PAGE');
 
-            final loggedUserChat = await authChatService
-              .loggedInUserChat(authService.usuario!.id);
+            int id = profileProvider.usuario!.id;
+            String apiUrl = environmentProvider.apiUrl;
+
+            debugPrint('ID: $id');
+            debugPrint('API URL: $apiUrl');
+
+            final loggedUserChat = await authChatService.loggedInUserChat(id, apiUrl);
 
             if(loggedUserChat) {
-              socketChatService.connect();
-              await authChatService.userChatContacts(false);
+              socketChatService.connect(environmentProvider.socketUrl);
+              await authChatService.userChatContacts(false, environmentProvider.apiUrl);
 
               if(context.mounted) {
                 Navigator.of(context).pushNamed('contacts');

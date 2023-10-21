@@ -1,14 +1,10 @@
-// To parse this JSON data, do
-//
-//     final messageChat = messageChatFromJson(jsonString);
-
 import 'dart:convert';
 
-MessageChat messageChatFromJson(String str) => MessageChat.fromJson(json.decode(str));
+MessageChatModel messageChatModelFromJson(String str) => MessageChatModel.fromJson(json.decode(str));
 
-String messageChatToJson(MessageChat data) => json.encode(data.toJson());
+String messageChatModelToJson(MessageChatModel data) => json.encode(data.toJson());
 
-class MessageChat {
+class MessageChatModel {
     int from;
     int to;
     String content;
@@ -16,7 +12,7 @@ class MessageChat {
     DateTime? createdAt;
     int? id;
 
-    MessageChat({
+    MessageChatModel({
         required this.from,
         required this.to,
         required this.content,
@@ -25,7 +21,7 @@ class MessageChat {
         this.id,
     });
 
-    factory MessageChat.fromJson(Map<String, dynamic> json) => MessageChat(
+    factory MessageChatModel.fromJson(Map<String, dynamic> json) => MessageChatModel(
         from: json["from"],
         to: json["to"],
         content: json["content"],
