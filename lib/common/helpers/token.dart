@@ -58,4 +58,17 @@ class Token {
       return false;
     }
   }
+
+  static Future<void> deleteToke() async{
+    const storage =  FlutterSecureStorage();
+    await storage.delete(key: 'token');
+  }
+
+  static Future<void> renewToke() async{
+    
+    String token = await getToken();
+    debugPrint(token);
+    //aca hacer la peticion para renovar el token
+    //guardar nuevo token => saveToke(token, expiryTime)
+  }
 }

@@ -8,6 +8,7 @@ import 'package:gam/common/global/environment_provider.dart';
 import 'package:gam/login/providers/providers.dart';
 import 'package:gam/profile/providers/providers.dart';
 import 'package:gam/routes/routes.dart';
+import 'package:gam/settings/providers/providers.dart';
 import 'package:gam/subscription/providers/providers.dart';
 import 'package:gam/theme/app_theme.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +25,8 @@ void main() {
       ChangeNotifierProvider(create: (_) => AuthChatService()),
       ChangeNotifierProvider(create: (_) => SocketChatService()),
       ChangeNotifierProvider(create: (_) => ChatService()),
-      ChangeNotifierProvider(create: (_) => MessageChatService())
+      ChangeNotifierProvider(create: (_) => MessageChatService()),
+      ChangeNotifierProvider(create: (_) => PasswordProvider()),
     ],
     child: const MainApp(),
   ));

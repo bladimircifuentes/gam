@@ -19,4 +19,14 @@ class AuthServices {
     }
   }
 
+  Future<void> deleteResponse() async{
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      await prefs.remove('responseModel');
+      debugPrint('######## DELETE RESPONSE ########');
+    } catch (e) {
+      debugPrint('######## ERROR DELETE RESPONSE ########');
+    }
+  }
+
 }

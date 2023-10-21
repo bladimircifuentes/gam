@@ -10,7 +10,7 @@ class StudentPage extends StatelessWidget {
         title: const Text('Studen page'),
         actions: [
           IconButton(
-            onPressed: (){}, 
+            onPressed: () => Navigator.pushNamed(context, 'profile'), 
             icon: const Icon(Icons.person_pin)
           )
         ],

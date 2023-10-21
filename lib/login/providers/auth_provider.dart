@@ -9,7 +9,8 @@ import 'package:http/http.dart' as http;
 class AuthProvider extends ChangeNotifier {
   int _state = 1;
   int get state => _state;
-  
+  final AuthServices _authServices = AuthServices();
+
   Future<void> login({
     required String email, 
     required String password,
@@ -54,8 +55,8 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> _saveData(ResponseModel responseModel) async{
-    AuthServices authServices = AuthServices();
-    if(!await authServices.saveResponse(responseModel)){
+    
+    if(!await _authServices.saveResponse(responseModel)){
       _state = 5;
       notifyListeners();
       return;
@@ -76,6 +77,12 @@ class AuthProvider extends ChangeNotifier {
 
   Future<void> loginSucces() async{
     _state = 1;
+    notifyListeners();
+  }
+
+  Future logout()async{
+    await _authServices.deleteResponse();
+    await Token.deleteToke();
     notifyListeners();
   }
 }

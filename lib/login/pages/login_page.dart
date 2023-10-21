@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
                     _form(email, password, auth, context),
                     const SizedBox(height: 15,),
                     GestureDetector(
-                      onTap: null,
+                      onTap: ()=> Navigator.pushNamed(context, 'forgotten_password'),
                       child: const Text(
                         '¿Has olvidado tu contraseña?',
                         style: TextStyle(
