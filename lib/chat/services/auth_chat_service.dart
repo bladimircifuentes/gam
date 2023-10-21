@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gam/common/global/environment.dart';
+import 'package:gam/common/helpers/token.dart';
 import 'package:http/http.dart' as http;
 import 'package:gam/chat/models/contact_chat.dart';
 import 'package:gam/chat/models/contact_chat_response.dart';
@@ -16,12 +16,13 @@ class AuthChatService with ChangeNotifier {
 
   Future<bool> loggedInUserChat(int id) async {
     final Uri url = Uri.parse('${Environment.apiUrl}/user-chat/$id');
-    const storage = FlutterSecureStorage();
-    final String token = await storage.read(key: 'token') ?? '';
+    final Map<String, dynamic> dataToken = await json.decode(
+      await Token.getToken()
+    );
 
     final response = await http.get(url, headers: {
       HttpHeaders.contentTypeHeader: 'application/json',
-      HttpHeaders.authorizationHeader: 'Bearer $token'
+      HttpHeaders.authorizationHeader: 'Bearer ${dataToken['token']}'
     });
 
     if (response.statusCode == 200) {
@@ -56,10 +57,11 @@ class AuthChatService with ChangeNotifier {
   Future<bool> _getContacts(SharedPreferences prefs, String key) async {
     final Uri url = Uri.parse('${Environment.apiUrl}/user-contacts');
     final prefs = await SharedPreferences.getInstance();
-    const storage = FlutterSecureStorage();
-    final String token = await storage.read(key: 'token') ?? '';
+    final Map<String, dynamic> dataToken = await json.decode(
+      await Token.getToken()
+    );
 
-    debugPrint('token: $token');
+    debugPrint('token: ${dataToken['token']}');
 
     final Map body = {
       "id": userChat!.id,
@@ -72,7 +74,7 @@ class AuthChatService with ChangeNotifier {
     final response = await http.post(url,
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
-          HttpHeaders.authorizationHeader: 'Bearer $token'
+          HttpHeaders.authorizationHeader: 'Bearer ${dataToken['token']}'
         },
         body: jsonEncode(body));
 

@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:gam/common/global/environment.dart';
+import 'package:gam/common/helpers/token.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
 enum ServerStatus { online, offline, connecting }
@@ -13,14 +15,16 @@ class SocketChatService with ChangeNotifier {
   socket_io.Socket get socket => _socket;
 
   void connect() async {
-    const storage = FlutterSecureStorage();
-    final String token = await storage.read(key: 'token') ?? '';
+    final Map<String, dynamic> dataToken = await json.decode(
+      await Token.getToken()
+    );
+    
 
     _socket = socket_io.io(Environment.socketUrl, {
       'transports': ['websocket'],
       'autoConnect': 'true',
       'forceNew': true,
-      'extraHeaders': {'x-token': token}
+      'extraHeaders': {'x-token': dataToken['token']}
     });
 
     _socket.on('connect', (_) {
